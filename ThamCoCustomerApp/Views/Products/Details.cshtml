@@ -2,6 +2,7 @@
 
 @{
 }
+
 <link href="~/Stylesheet/bootstrap.css" rel="stylesheet" type="text/css" />
 <link href="~/Stylesheet/site.css" rel="stylesheet" type="text/css" />
 
@@ -15,7 +16,17 @@
             <h4 class="text-muted">@Model.Brand</h4>
             <p class="lead">@Model.Description</p>
             <p><strong>Price: </strong>@Model.Price.ToString("C")</p>
-            <a href="#" class="btn btn-primary btn-lg">Add to Cart</a>
+            <p><strong>Stock Level: </strong>@Model.StockLevel</p>
+            <form asp-controller="Basket" asp-action="AddToBasket" method="post">
+                <input type="hidden" asp-for="ImageUrl" value="@Model.ImageUrl"/>
+                <input type="hidden" asp-for="ProductId" value="@Model.ProductId" />
+                <input type="hidden" asp-for="CompanyId" value="@Model.CompanyId" />
+                <input type="hidden" asp-for="Name" value="@Model.Name" />
+                <input type="hidden" asp-for="Brand" value="@Model.Brand" />
+                <input type="hidden" asp-for="Description" value="@Model.Description" />
+                <input type="hidden" asp-for="Price" value="@Model.Price" />
+                <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+            </form>
         </div>
     </div>
 </div>

@@ -2,9 +2,9 @@
 using System.Text.Json;
 using ThamCoCustomerApp.Dtos;
 
-namespace ThamCoCustomerApp.Services
+namespace ThamCoCustomerApp.Services.Product
 {
-    public class ProductServiceFake: IProductService
+    public class ProductServiceFake : IProductService
     {
         private readonly IEnumerable<CompanyWithProductDto> _products;
         public ProductServiceFake()
@@ -19,7 +19,8 @@ namespace ThamCoCustomerApp.Services
                     Brand = "Brand 1",
                     Description = "Description 1",
                     Price = 10,
-                    ImageUrl = "imageUrl"
+                    ImageUrl = "imageUrl",
+                    StockLevel = 10
                 },
                 new CompanyWithProductDto
                 {
@@ -29,7 +30,8 @@ namespace ThamCoCustomerApp.Services
                     Brand = "Brand 2",
                     Description = "Description 2",
                     Price = 20,
-                    ImageUrl = "imageUrl"
+                    ImageUrl = "imageUrl",
+                    StockLevel = 20
                 },
 
                 new CompanyWithProductDto
@@ -40,7 +42,8 @@ namespace ThamCoCustomerApp.Services
                     Brand = "Brand 3",
                     Description = "Description 3",
                     Price = 30,
-                    ImageUrl = "imageUrl"
+                    ImageUrl = "imageUrl",
+                    StockLevel = 30
                 },
                 new CompanyWithProductDto
                 {
@@ -50,7 +53,8 @@ namespace ThamCoCustomerApp.Services
                     Brand = "Brand 4",
                     Description = "Description 4",
                     Price = 40,
-                    ImageUrl = "imageUrl"
+                    ImageUrl = "imageUrl",
+                    StockLevel = 40
                 },
 
                 new CompanyWithProductDto
@@ -61,7 +65,8 @@ namespace ThamCoCustomerApp.Services
                     Brand = "Brand 5",
                     Description = "Description 5",
                     Price = 50,
-                    ImageUrl = "imageUrl"
+                    ImageUrl = "imageUrl",
+                    StockLevel = 50
                 }
             };
         }

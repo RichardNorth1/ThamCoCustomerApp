@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using ThamCoCustomerApp.Dtos;
 using ThamCoCustomerApp.Models;
-using ThamCoCustomerApp.Services;
+using ThamCoCustomerApp.Services.Product;
 
 namespace ThamCoCustomerApp.Controllers
 {
@@ -41,7 +41,8 @@ namespace ThamCoCustomerApp.Controllers
             {
                 productViewModels = productViewModels
                     .Where(p => p.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-                                p.Brand.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                                p.Brand.Contains(searchString, StringComparison.OrdinalIgnoreCase)||
+                                p.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                     .ToList();
             }
 
@@ -68,6 +69,25 @@ namespace ThamCoCustomerApp.Controllers
 
             var productViewModel = _mapper.Map<ProductViewModel>(product);
             return View(productViewModel);
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CompanyWithProductDto>>> GetProducts()
+        {
+            var productResponse = await _productService.GetProducts();
+            if (!productResponse.IsSuccessStatusCode)
+            {
+                throw new Exception(productResponse.ReasonPhrase);
+            }
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var contentString = await productResponse.Content.ReadAsStringAsync();
+            var products = JsonSerializer.Deserialize<List<CompanyWithProductDto>>(contentString, options);
+            return Ok(contentString);
         }
     }
 }

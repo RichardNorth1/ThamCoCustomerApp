@@ -1,0 +1,64 @@
+﻿@model ThamCoCustomerApp.Models.UserProfileViewModel
+
+<h2>Update profile</h2>
+
+@using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Surname)
+        @Html.TextBoxFor(model => model.Surname, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Forename)
+        @Html.TextBoxFor(model => model.Forename, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Forename, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.EmailAddress)
+        @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Telephone)
+        @Html.TextBoxFor(model => model.Telephone, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Telephone, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.StreetAddress)
+        @Html.TextBoxFor(model => model.StreetAddress, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.StreetAddress, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.City)
+        @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.County)
+        @Html.TextBoxFor(model => model.County, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.County, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PostalCode)
+        @Html.TextBoxFor(model => model.PostalCode, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

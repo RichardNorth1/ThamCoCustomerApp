@@ -1,6 +1,11 @@
+using Auth0.AspNetCore.Authentication;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ThamCoCustomerApp;
-using ThamCoCustomerApp.Services;
+using ThamCoCustomerApp.Services.Account;
+using ThamCoCustomerApp.Services.BasketService;
+using ThamCoCustomerApp.Services.Product;
+using ThamCoCustomerApp.Services.Token;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,18 +16,37 @@ builder.Services.AddControllersWithViews();
 var autoMapperConfig = new MapperConfiguration(c => c.AddProfile(new MapperProfile()));
 IMapper mapper = autoMapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
+builder.Services.AddAuth0WebAppAuthentication(options =>
+{
+    options.Domain = builder.Configuration["Auth:CustomerWebApp:Domain"];
+    options.ClientId = builder.Configuration["Auth:CustomerWebApp:ClientId"];
+});
+builder.Services.AddAuthorization();
+
 
 // Register IProductService based on the environment
 if (builder.Environment.IsDevelopment())
 {
-    builder.Services.AddSingleton<IProductService, ProductServiceFake>();
+    //builder.Services.AddScoped<IProductService, ProductServiceFake>();
+    builder.Services.AddHttpClient<IProductService, ProductService>(client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["WebServices:CheapestProducts:BaseUrl"]);
+    });
+    builder.Services.AddScoped<IAccountService, AccountServiceFake>();
+    builder.Services.AddScoped<IBasketService, BasketService>();
+    builder.Services.AddSingleton<ITokenService, CheapestProductTokenService>();
 }
 else
 {
+
+    builder.Services.AddSingleton<IAccountService, AccountServiceFake>();
+    builder.Services.AddSingleton<IBasketService, BasketService>();
     builder.Services.AddHttpClient<IProductService, ProductService>(client =>
     {
-        client.BaseAddress = new Uri(builder.Configuration["WebServices:Products:BaseUrl"]);
+        client.BaseAddress = new Uri(builder.Configuration["WebServices:CheapestProducts:BaseUrl"]);
     });
+    builder.Services.AddSingleton<ITokenService, CheapestProductTokenService>();
+
 }
 
 var app = builder.Build();
@@ -40,6 +64,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

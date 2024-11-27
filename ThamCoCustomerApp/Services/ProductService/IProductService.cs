@@ -1,4 +1,4 @@
-﻿namespace ThamCoCustomerApp.Services
+﻿namespace ThamCoCustomerApp.Services.Product
 {
     public interface IProductService
     {

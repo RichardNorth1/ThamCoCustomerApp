@@ -1,0 +1,70 @@
+﻿@model UserProfileViewModel
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<style>
+    .profile-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-top: 50px;
+    }
+
+    .profile-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+    }
+
+    .profile-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .profile-details h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .profile-details p {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .profile-details i {
+        margin-right: 5px;
+    }
+</style>
+
+<div class="profile-container">
+    <h2>@ViewData["Title"].</h2>
+
+    <img src="@Model.ProfileImage" alt="" class="profile-image" />
+
+        <div class="profile-details">
+            <h2>@Model.FullName</h2>
+            <p>
+                <i class="glyphicon glyphicon-envelope"></i> @Model.EmailAddress
+            </p>
+            <p>
+                <i class="glyphicon glyphicon-earphone"></i> @Model.Telephone
+            </p>
+            <p>
+                <i class="glyphicon glyphicon-map-marker"></i> @Model.StreetAddress, @Model.City, @Model.County, @Model.PostalCode
+            </p>
+            <p>
+                <i class="glyphicon glyphicon-piggy-bank"></i> @Model.Balance
+            </p>
+        <form asp-controller="Account" asp-action="UpdateProfile" method="post" style="display:inline;">
+            <button type="submit" class="nav-link btn btn-link text-dark">Update profile</button>
+        </form>
+        </div>
+</div>

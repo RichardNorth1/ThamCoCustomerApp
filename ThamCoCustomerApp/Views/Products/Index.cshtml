@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ThamCoCustomerApp.Models.ProductViewModel>
+﻿@model IEnumerable<ProductViewModel>
 
 @{
     ViewData["Title"] = "Products";
@@ -18,21 +18,89 @@
         </div>
     </form>
 
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" />
-                    <div class="card-body">
-                        <h5 class="card-title">@item.Name</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@item.Brand</h6>
-                        <p class="card-text">@item.Description</p>
-                        <p class="card-text"><strong>Price: </strong>@item.Price.ToString("C")</p>
-                        <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-primary">View Details</a>
-                    </div>
-                </div>
-            </div>
-        }
+    <div class="row" id="productContainer">
+        
     </div>
+
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Load products immediately
+        loadProducts();
+
+        // Refresh products every 5 minutes (300,000 milliseconds)
+        setInterval(loadProducts, 300000);
+    });
+
+    function loadProducts() {
+        $.ajax({
+            url: '/Products/GetProducts',
+            type: 'GET',
+            success: function (response) {
+                var productContainer = $('#productContainer');
+
+                // Parse response if it's a string
+                if (typeof response === "string") {
+                    response = JSON.parse(response);
+                }
+
+                // Clear the product container
+                productContainer.empty();
+
+                // Log the refresh action
+                console.log('Loading products...');
+
+                // Dynamically build product cards
+                response.forEach(function (item) {
+                    console.log('Processing item:', item); // Debugging
+
+                    // Create card structure
+                    var card = $('<div>').addClass('col-md-4 mb-4');
+                    var cardBody = $('<div>').addClass('card h-100');
+                    var cardImage = $('<img>')
+                        .attr('src', item.ImageUrl || item.imageUrl)
+                        .addClass('card-img-top')
+                        .attr('alt', item.Name || item.name);
+                    var cardTitle = $('<h5>')
+                        .addClass('card-title')
+                        .text(item.Name || item.name);
+                    var cardSubtitle = $('<h6>')
+                        .addClass('card-subtitle mb-2 text-muted')
+                        .text(item.Brand || item.brand);
+                    var cardDescription = $('<p>')
+                        .addClass('card-text')
+                        .text(item.Description || item.description);
+                    var cardPrice = $('<p>')
+                        .addClass('card-text')
+                        .html('<strong>Price:</strong> ' +
+                            (item.Price !== undefined && item.Price !== null
+                                ? item.Price.toLocaleString('en-US', { style: 'currency', currency: 'GBP' })
+                                : (item.price !== undefined && item.price !== null
+                                    ? item.price.toLocaleString('en-US', { style: 'currency', currency: 'GBP' })
+                                    : 'N/A')));
+                    var cardStockLevel = $('<p>')
+                        .addClass('card-text')
+                        .html('<strong>Stock Level:</strong> ' + (item.StockLevel || item.stockLevel));
+                    var viewDetailsLink = $('<a>')
+                        .addClass('btn btn-primary')
+                        .attr('href', '/Products/Details/' + (item.ProductId || item.productId))
+                        .text('View Details');
+
+                    // Append elements to the card
+                    cardBody.append(cardImage, cardTitle, cardSubtitle, cardDescription, cardPrice, cardStockLevel, viewDetailsLink);
+                    card.append(cardBody);
+                    productContainer.append(card);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log('Error loading products:', error);
+            }
+        });
+    }
+</script>
+
+
+

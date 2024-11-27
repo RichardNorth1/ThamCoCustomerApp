@@ -5,7 +5,7 @@
 
         public ProductViewModel()
         {
-            
+
         }
         public ProductViewModel(int productId, int companyId, string name, string brand, string description, double price, string imageUrl)
         {
@@ -25,5 +25,6 @@
         public string Description { get; set; }
         public double Price { get; set; }
         public string ImageUrl { get; set; }
+        public int StockLevel { get; set; }
     }
 }
