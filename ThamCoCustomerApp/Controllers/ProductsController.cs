@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using ThamCoCustomerApp.Dtos;
@@ -22,33 +21,8 @@ namespace ThamCoCustomerApp.Controllers
         // GET: Products
         public async Task<IActionResult> Index(string searchString)
         {
-            var productResponse = await _productService.GetProducts();
-            if (!productResponse.IsSuccessStatusCode)
-            {
-                throw new Exception(productResponse.ReasonPhrase);
-            }
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var contentString = await productResponse.Content.ReadAsStringAsync();
-            var products = JsonSerializer.Deserialize<List<CompanyWithProductDto>>(contentString, options);
-
-            var productViewModels = _mapper.Map<List<ProductViewModel>>(products);
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                productViewModels = productViewModels
-                    .Where(p => p.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-                                p.Brand.Contains(searchString, StringComparison.OrdinalIgnoreCase)||
-                                p.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
-
             ViewData["CurrentFilter"] = searchString;
-
-            return View(productViewModels);
+            return View();
         }
 
         // GET: Products/Details/5
@@ -71,14 +45,13 @@ namespace ThamCoCustomerApp.Controllers
             return View(productViewModel);
         }
 
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CompanyWithProductDto>>> GetProducts()
+        // GET: Products/GetProducts
+        public async Task<IActionResult> GetProducts(string searchString)
         {
             var productResponse = await _productService.GetProducts();
             if (!productResponse.IsSuccessStatusCode)
             {
-                throw new Exception(productResponse.ReasonPhrase);
+                return StatusCode((int)productResponse.StatusCode, productResponse.ReasonPhrase);
             }
 
             var options = new JsonSerializerOptions
@@ -87,7 +60,19 @@ namespace ThamCoCustomerApp.Controllers
             };
             var contentString = await productResponse.Content.ReadAsStringAsync();
             var products = JsonSerializer.Deserialize<List<CompanyWithProductDto>>(contentString, options);
-            return Ok(contentString);
+
+            var productViewModels = _mapper.Map<List<ProductViewModel>>(products);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                productViewModels = productViewModels
+                    .Where(p => p.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                                p.Brand.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                                p.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            return Json(productViewModels);
         }
     }
 }

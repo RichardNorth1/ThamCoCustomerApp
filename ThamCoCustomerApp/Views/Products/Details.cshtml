@@ -16,9 +16,10 @@
             <h4 class="text-muted">@Model.Brand</h4>
             <p class="lead">@Model.Description</p>
             <p><strong>Price: </strong>@Model.Price.ToString("C")</p>
+            @if(User.Identity.IsAuthenticated){
             <p><strong>Stock Level: </strong>@Model.StockLevel</p>
             <form asp-controller="Basket" asp-action="AddToBasket" method="post">
-                <input type="hidden" asp-for="ImageUrl" value="@Model.ImageUrl"/>
+                <input type="hidden" asp-for="ImageUrl" value="@Model.ImageUrl" />
                 <input type="hidden" asp-for="ProductId" value="@Model.ProductId" />
                 <input type="hidden" asp-for="CompanyId" value="@Model.CompanyId" />
                 <input type="hidden" asp-for="Name" value="@Model.Name" />
@@ -27,6 +28,8 @@
                 <input type="hidden" asp-for="Price" value="@Model.Price" />
                 <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
             </form>
+            }
+
         </div>
     </div>
 </div>

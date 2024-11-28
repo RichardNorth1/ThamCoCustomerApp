@@ -119,5 +119,14 @@ namespace ThamCoCustomerApp.Services.Account
                 });
             }
         }
+
+        public Task<HttpResponseMessage> GetAccounts()
+        {
+            return Task.FromResult(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(JsonSerializer.Serialize(_accounts))
+            });
+        }
     }
 }

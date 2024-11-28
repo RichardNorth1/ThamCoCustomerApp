@@ -9,9 +9,9 @@
 <div class="container mt-4">
     <h1 class="text-center mb-4">Products</h1>
 
-    <form method="get" asp-action="Index" class="mb-4">
+    <form id="searchForm" class="mb-4">
         <div class="input-group">
-            <input type="text" name="searchString" class="form-control" placeholder="Search for products..." value="@ViewData["CurrentFilter"]" />
+            <input type="text" id="searchString" name="searchString" class="form-control" placeholder="Search for products..." value="@ViewData["CurrentFilter"]" />
             <div class="input-group-append">
                 <button class="btn btn-primary" type="submit">Search</button>
             </div>
@@ -19,9 +19,8 @@
     </form>
 
     <div class="row" id="productContainer">
-        
+        <!-- Products will be loaded here via AJAX -->
     </div>
-
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -33,64 +32,72 @@
 
         // Refresh products every 5 minutes (300,000 milliseconds)
         setInterval(loadProducts, 300000);
+
+        // Handle search form submission
+        $('#searchForm').submit(function (event) {
+            event.preventDefault();
+            loadProducts();
+        });
     });
 
     function loadProducts() {
+        var searchString = $('#searchString').val();
         $.ajax({
             url: '/Products/GetProducts',
             type: 'GET',
+            data: { searchString: searchString },
             success: function (response) {
                 var productContainer = $('#productContainer');
 
-                // Parse response if it's a string
-                if (typeof response === "string") {
-                    response = JSON.parse(response);
-                }
-
                 // Clear the product container
                 productContainer.empty();
-
-                // Log the refresh action
-                console.log('Loading products...');
-
+                console.log("loading products")
                 // Dynamically build product cards
                 response.forEach(function (item) {
-                    console.log('Processing item:', item); // Debugging
-
-                    // Create card structure
+                    // create card
                     var card = $('<div>').addClass('col-md-4 mb-4');
+                    // create card body
                     var cardBody = $('<div>').addClass('card h-100');
+                    // create the image tag
                     var cardImage = $('<img>')
-                        .attr('src', item.ImageUrl || item.imageUrl)
+                        .attr('src', item.imageUrl)
                         .addClass('card-img-top')
-                        .attr('alt', item.Name || item.name);
+                        .attr('alt', item.name);
+                    // create card title
                     var cardTitle = $('<h5>')
                         .addClass('card-title')
-                        .text(item.Name || item.name);
+                        .text(item.name);
+                        // create card subtitle
                     var cardSubtitle = $('<h6>')
                         .addClass('card-subtitle mb-2 text-muted')
-                        .text(item.Brand || item.brand);
+                        .text(item.brand);
+                        // create card description
                     var cardDescription = $('<p>')
                         .addClass('card-text')
-                        .text(item.Description || item.description);
+                        .text(item.description);
+                        // create card price
                     var cardPrice = $('<p>')
                         .addClass('card-text')
-                        .html('<strong>Price:</strong> ' +
-                            (item.Price !== undefined && item.Price !== null
-                                ? item.Price.toLocaleString('en-US', { style: 'currency', currency: 'GBP' })
-                                : (item.price !== undefined && item.price !== null
-                                    ? item.price.toLocaleString('en-US', { style: 'currency', currency: 'GBP' })
-                                    : 'N/A')));
-                    var cardStockLevel = $('<p>')
-                        .addClass('card-text')
-                        .html('<strong>Stock Level:</strong> ' + (item.StockLevel || item.stockLevel));
-                    var viewDetailsLink = $('<a>')
-                        .addClass('btn btn-primary')
-                        .attr('href', '/Products/Details/' + (item.ProductId || item.productId))
-                        .text('View Details');
+                        .html('<strong>Price:</strong> ' + item.price.toLocaleString('en-US', { style: 'currency', currency: 'GBP' }));
 
                     // Append elements to the card
-                    cardBody.append(cardImage, cardTitle, cardSubtitle, cardDescription, cardPrice, cardStockLevel, viewDetailsLink);
+                    cardBody.append(cardImage, cardTitle, cardSubtitle, cardDescription, cardPrice);
+
+                    // Conditionally render stock level for authenticated users
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @:var cardStockLevel = $('<p>')
+                    @:.addClass('card-text')
+                    @:.html('<strong>Stock Level:</strong> ' + item.stockLevel);
+                    @:cardBody.append(cardStockLevel);
+                }
+
+                        var viewDetailsLink = $('<a>')
+                        .addClass('btn btn-primary')
+                        .attr('href', '/Products/Details/' + item.productId)
+                        .text('View Details');
+
+                    cardBody.append(viewDetailsLink);
                     card.append(cardBody);
                     productContainer.append(card);
                 });
@@ -101,6 +108,3 @@
         });
     }
 </script>
-
-
-

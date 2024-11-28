@@ -27,20 +27,15 @@ builder.Services.AddAuthorization();
 // Register IProductService based on the environment
 if (builder.Environment.IsDevelopment())
 {
-    //builder.Services.AddScoped<IProductService, ProductServiceFake>();
-    builder.Services.AddHttpClient<IProductService, ProductService>(client =>
-    {
-        client.BaseAddress = new Uri(builder.Configuration["WebServices:CheapestProducts:BaseUrl"]);
-    });
+    builder.Services.AddScoped<IProductService, ProductServiceFake>();
     builder.Services.AddScoped<IAccountService, AccountServiceFake>();
-    builder.Services.AddScoped<IBasketService, BasketService>();
-    builder.Services.AddSingleton<ITokenService, CheapestProductTokenService>();
+    builder.Services.AddSingleton<IBasketService, BasketServiceFake>();
 }
 else
 {
 
-    builder.Services.AddSingleton<IAccountService, AccountServiceFake>();
-    builder.Services.AddSingleton<IBasketService, BasketService>();
+    builder.Services.AddScoped<IAccountService, AccountServiceFake>();
+    builder.Services.AddSingleton<IBasketService, BasketServiceFake>();
     builder.Services.AddHttpClient<IProductService, ProductService>(client =>
     {
         client.BaseAddress = new Uri(builder.Configuration["WebServices:CheapestProducts:BaseUrl"]);
