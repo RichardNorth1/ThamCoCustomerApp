@@ -1,0 +1,37 @@
+﻿@model OrderViewModel
+
+<h1>Order Details</h1>
+
+<div>
+    <h3>Order ID: @Model.OrderId</h3>
+    <p>Customer ID: @Model.CustomerId</p>
+    <p>Order Status: @Model.OrderStatus</p>
+    <p>Order Date: @Model.OrderDate.ToString("yyyy-MM-dd")</p>
+    <p>Total Price: $@Model.totalPrice</p>
+</div>
+
+<hr />
+
+<h2>Products</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Brand</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Brand</td>
+                <td>@product.Description</td>
+                <td>$@product.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>

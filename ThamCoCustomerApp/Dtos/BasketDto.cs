@@ -1,5 +1,4 @@
-﻿using ThamCoCustomerApp.Data;
-
+﻿
 namespace ThamCoCustomerApp.Dtos
 {
     public class BasketDto

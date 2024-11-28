@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text.Json;
-using ThamCoCustomerApp.Data;
 using ThamCoCustomerApp.Dtos;
 using ThamCoCustomerApp.Models;
 

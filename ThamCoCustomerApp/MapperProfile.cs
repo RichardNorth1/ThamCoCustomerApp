@@ -9,6 +9,7 @@ namespace ThamCoCustomerApp
         public MapperProfile()
         {
             CreateMap<CompanyWithProductDto, ProductViewModel>().ReverseMap();
+            CreateMap<OrderDto, OrderViewModel>().ReverseMap();
         }
     }
 }

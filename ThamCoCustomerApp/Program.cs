@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ThamCoCustomerApp;
 using ThamCoCustomerApp.Services.Account;
 using ThamCoCustomerApp.Services.BasketService;
+using ThamCoCustomerApp.Services.OrderService;
 using ThamCoCustomerApp.Services.Product;
 using ThamCoCustomerApp.Services.Token;
 
@@ -27,13 +28,14 @@ builder.Services.AddAuthorization();
 // Register IProductService based on the environment
 if (builder.Environment.IsDevelopment())
 {
+    builder.Services.AddScoped<IOrderService, OrderServiceFake>();
     builder.Services.AddScoped<IProductService, ProductServiceFake>();
-    builder.Services.AddScoped<IAccountService, AccountServiceFake>();
+    builder.Services.AddSingleton<IAccountService, AccountServiceFake>();
     builder.Services.AddSingleton<IBasketService, BasketServiceFake>();
 }
 else
 {
-
+    builder.Services.AddScoped<IOrderService, OrderServiceFake>();
     builder.Services.AddScoped<IAccountService, AccountServiceFake>();
     builder.Services.AddSingleton<IBasketService, BasketServiceFake>();
     builder.Services.AddHttpClient<IProductService, ProductService>(client =>
