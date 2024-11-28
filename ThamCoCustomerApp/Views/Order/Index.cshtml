@@ -19,7 +19,7 @@
                 <td>@order.OrderId</td>
                 <td>@order.OrderStatus</td>
                 <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                <td>@order.totalPrice.ToString("C")</td>
+                <td>@order.totalPrice.ToString("C", new System.Globalization.CultureInfo("en-GB"))</td>
                 <td>
                     <a asp-controller="Order" asp-action="Details" asp-route-id="@order.OrderId">Details</a>
                 </td>

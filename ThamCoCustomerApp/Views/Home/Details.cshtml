@@ -15,7 +15,7 @@
             <h1>@Model.Name</h1>
             <h4 class="text-muted">@Model.Brand</h4>
             <p class="lead">@Model.Description</p>
-            <p><strong>Price: </strong>@Model.Price.ToString("C")</p>
+            <p><strong>Price: </strong>@Model.Price.ToString("C", new System.Globalization.CultureInfo("en-GB"))</p>
             @if(User.Identity.IsAuthenticated){
             <p><strong>Stock Level: </strong>@Model.StockLevel</p>
             <form asp-controller="Basket" asp-action="AddToBasket" method="post">

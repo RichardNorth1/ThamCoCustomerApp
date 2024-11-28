@@ -40,9 +40,9 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>@product.Price.ToString("C")</td>
-                                <td>1</td> 
-                                <td>@product.Price.ToString("C")</td>
+                                <td>@product.Price.ToString("C", new System.Globalization.CultureInfo("en-GB"))</td>
+                                <td>1</td>
+                                <td>@product.Price.ToString("C", new System.Globalization.CultureInfo("en-GB"))</td>
                                 <td>
                                     <form asp-action="RemoveFromBasket" asp-controller="Basket" method="post">
                                         <input type="hidden" name="productId" value="@product.ProductId" />
@@ -55,7 +55,7 @@
                     <tfoot>
                         <tr>
                             <th colspan="3" class="text-right">Total Price</th>
-                            <th>@Model.TotalPrice.ToString("C")</th>
+                            <th>@Model.TotalPrice.ToString("C", new System.Globalization.CultureInfo("en-GB"))</th>
                             <th></th>
                         </tr>
                     </tfoot>

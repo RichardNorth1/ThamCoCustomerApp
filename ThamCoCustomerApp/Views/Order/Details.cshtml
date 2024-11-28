@@ -4,10 +4,9 @@
 
 <div>
     <h3>Order ID: @Model.OrderId</h3>
-    <p>Customer ID: @Model.CustomerId</p>
     <p>Order Status: @Model.OrderStatus</p>
     <p>Order Date: @Model.OrderDate.ToString("yyyy-MM-dd")</p>
-    <p>Total Price: $@Model.totalPrice</p>
+    <p>Total Price: @Model.totalPrice.ToString("C", new System.Globalization.CultureInfo("en-GB"))</p>
 </div>
 
 <hr />
@@ -30,7 +29,7 @@
                 <td>@product.Name</td>
                 <td>@product.Brand</td>
                 <td>@product.Description</td>
-                <td>$@product.Price</td>
+                <td>@product.Price.ToString("C", new System.Globalization.CultureInfo("en-GB"))</td>
             </tr>
         }
     </tbody>
