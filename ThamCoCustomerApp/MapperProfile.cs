@@ -10,6 +10,7 @@ namespace ThamCoCustomerApp
         {
             CreateMap<CompanyWithProductDto, ProductViewModel>().ReverseMap();
             CreateMap<OrderDto, OrderViewModel>().ReverseMap();
+            CreateMap<CustomerAccountDto, UserProfileViewModel>().ReverseMap();
         }
     }
 }

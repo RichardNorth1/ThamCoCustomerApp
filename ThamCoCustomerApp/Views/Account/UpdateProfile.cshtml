@@ -19,12 +19,6 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.EmailAddress)
-        @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="form-group">
         @Html.LabelFor(model => model.Telephone)
         @Html.TextBoxFor(model => model.Telephone, new { @class = "form-control" })
         @Html.ValidationMessageFor(model => model.Telephone, "", new { @class = "text-danger" })
@@ -54,7 +48,7 @@
         @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
     </div>
 
-    <button type="submit" class="btn btn-primary">Sign Up</button>
+    <button type="submit" class="btn btn-primary">Update Profile</button>
 }
 
 @section Scripts {

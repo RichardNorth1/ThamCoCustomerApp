@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ThamCoCustomerApp.Models;
+using ThamCoCustomerApp.Dtos;
 using ThamCoCustomerApp.Services.Account;
 
 namespace ThamCoCustomerApp.Tests.Services
@@ -23,7 +23,7 @@ namespace ThamCoCustomerApp.Tests.Services
         public async Task CreateAccount_ShouldAddAccount()
         {
             // Arrange
-            var newAccount = new CustomerAccount
+            var newAccount = new CustomerAccountDto
             {
                 AuthId = "5678",
                 Surname = "Smith",
@@ -39,7 +39,7 @@ namespace ThamCoCustomerApp.Tests.Services
 
             // Act
             var response = await _accountServiceFake.CreateAccount(newAccount);
-            var createdAccount = JsonSerializer.Deserialize<CustomerAccount>(await response.Content.ReadAsStringAsync());
+            var createdAccount = JsonSerializer.Deserialize<CustomerAccountDto>(await response.Content.ReadAsStringAsync());
 
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -64,7 +64,7 @@ namespace ThamCoCustomerApp.Tests.Services
 
             // Verify the account is removed
             var accountsResponse = await _accountServiceFake.GetAccounts();
-            var accounts = JsonSerializer.Deserialize<List<CustomerAccount>>(await accountsResponse.Content.ReadAsStringAsync());
+            var accounts = JsonSerializer.Deserialize<List<CustomerAccountDto>>(await accountsResponse.Content.ReadAsStringAsync());
             Assert.IsFalse(accounts.Any(a => a.AuthId == accountId));
         }
 
@@ -92,7 +92,7 @@ namespace ThamCoCustomerApp.Tests.Services
 
             // Act
             var response = await _accountServiceFake.GetAccount(accountId);
-            var account = JsonSerializer.Deserialize<CustomerAccount>(await response.Content.ReadAsStringAsync());
+            var account = JsonSerializer.Deserialize<CustomerAccountDto>(await response.Content.ReadAsStringAsync());
 
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -108,7 +108,7 @@ namespace ThamCoCustomerApp.Tests.Services
 
             // Act
             var response = await _accountServiceFake.GetAccount(accountId);
-            var account = JsonSerializer.Deserialize<CustomerAccount>(await response.Content.ReadAsStringAsync());
+            var account = JsonSerializer.Deserialize<CustomerAccountDto>(await response.Content.ReadAsStringAsync());
 
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -119,7 +119,7 @@ namespace ThamCoCustomerApp.Tests.Services
         public async Task UpdateAccount_ShouldUpdateAccount_WhenAccountExists()
         {
             // Arrange
-            var updatedAccount = new CustomerAccount
+            var updatedAccount = new CustomerAccountDto
             {
                 AuthId = "123",
                 Surname = "UpdatedSurname",
@@ -135,7 +135,7 @@ namespace ThamCoCustomerApp.Tests.Services
 
             // Act
             var response = await _accountServiceFake.UpdateAccount(updatedAccount);
-            var account = JsonSerializer.Deserialize<CustomerAccount>(await response.Content.ReadAsStringAsync());
+            var account = JsonSerializer.Deserialize<CustomerAccountDto>(await response.Content.ReadAsStringAsync());
 
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -155,7 +155,7 @@ namespace ThamCoCustomerApp.Tests.Services
         public async Task UpdateAccount_ShouldReturnNotFound_WhenAccountDoesNotExist()
         {
             // Arrange
-            var updatedAccount = new CustomerAccount
+            var updatedAccount = new CustomerAccountDto
             {
                 AuthId = "999",
                 Surname = "UpdatedSurname",

@@ -4,18 +4,18 @@ using System.Diagnostics.Metrics;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
-using ThamCoCustomerApp.Models;
+using ThamCoCustomerApp.Dtos;
 
 namespace ThamCoCustomerApp.Services.Account
 {
     public class AccountServiceFake : IAccountService
     {
-        private readonly List<CustomerAccount> _accounts;
+        private readonly List<CustomerAccountDto> _accounts;
 
         public AccountServiceFake()
         {
-            _accounts = new List<CustomerAccount> {
-                    new CustomerAccount
+            _accounts = new List<CustomerAccountDto> {
+                    new CustomerAccountDto
                     {
                         AuthId = "123",
                         Surname = "Richard",
@@ -28,7 +28,7 @@ namespace ThamCoCustomerApp.Services.Account
                         PostalCode = "ts177xa",
                         Balance = 100
                     },
-                    new CustomerAccount
+                    new CustomerAccountDto
                     {
                         AuthId = "1234",
                         Surname = "john",
@@ -44,8 +44,9 @@ namespace ThamCoCustomerApp.Services.Account
                 };
         }
 
-        public Task<HttpResponseMessage> CreateAccount(CustomerAccount account)
+        public Task<HttpResponseMessage> CreateAccount(CustomerAccountDto account)
         {
+            account.Balance = 100;
             _accounts.Add(account);
 
             return Task.FromResult(new HttpResponseMessage
@@ -88,7 +89,7 @@ namespace ThamCoCustomerApp.Services.Account
             });
         }
 
-        public Task<HttpResponseMessage> UpdateAccount(CustomerAccount account)
+        public Task<HttpResponseMessage> UpdateAccount(CustomerAccountDto account)
         {
             var existingAccount = _accounts.FirstOrDefault(a => a.AuthId == account.AuthId);
 
@@ -102,7 +103,7 @@ namespace ThamCoCustomerApp.Services.Account
                 existingAccount.City = account.City;
                 existingAccount.County = account.County;
                 existingAccount.PostalCode = account.PostalCode;
-                existingAccount.Balance = account.Balance;
+                existingAccount.Balance = 100;
 
                 return Task.FromResult(new HttpResponseMessage
                 {

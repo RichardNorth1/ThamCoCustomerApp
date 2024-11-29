@@ -12,16 +12,21 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using System.Diagnostics.Metrics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using ThamCoCustomerApp.Dtos;
+using static NuGet.Packaging.PackagingConstants;
+using AutoMapper;
 
 namespace ThamCoCustomerApp.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IMapper _mapper;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IMapper mapper)
         {
             _accountService = accountService;
+            _mapper = mapper;
         }
         public async Task Login(string returnUrl = "/Account/Profile")
         {
@@ -59,26 +64,16 @@ namespace ThamCoCustomerApp.Controllers
             };
             
             var contentString = await response.Content.ReadAsStringAsync();
-            var customer = JsonSerializer.Deserialize<CustomerAccount>(contentString, options);
+            var customer = JsonSerializer.Deserialize<CustomerAccountDto>(contentString, options);
             if(customer == null)
             {
                 return View(new UserProfileViewModel());
             }
-            var viewModel = new UserProfileViewModel
-            {
-                EmailAddress = User.Identity.Name,
-                ProfileImage = User.Claims
-                    .FirstOrDefault(c => c.Type == "picture")?.Value,
-                Surname = customer.Surname,
-                Forename = customer.Forename,
-                Telephone = customer.Telephone,
-                StreetAddress = customer.StreetAddress,
-                City = customer.City,
-                County = customer.County,
-                PostalCode = customer.PostalCode,
-                Balance = customer.Balance
-            };
-            return View(viewModel);
+            var customerViewModel = _mapper.Map<UserProfileViewModel>(customer);
+            customerViewModel.EmailAddress = User.Identity.Name;
+            customerViewModel.ProfileImage = User.Claims
+                    .FirstOrDefault(c => c.Type == "picture")?.Value;
+            return View(customerViewModel);
         }
 
         [Authorize]
@@ -109,26 +104,15 @@ namespace ThamCoCustomerApp.Controllers
         {
             if (model.Surname != null || 
                 model.Forename != null ||
-                model.EmailAddress != null || 
                 model.Telephone != null || 
                 model.StreetAddress != null ||
                 model.City != null || 
                 model.County != null || 
                 model.PostalCode != null)
             {
-                var customer = new CustomerAccount
-                {
-                    AuthId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value,
-                    Surname = model.Surname,
-                    Forename = model.Forename,
-                    Email = model.EmailAddress,
-                    Telephone = model.Telephone,
-                    StreetAddress = model.StreetAddress,
-                    City = model.City,
-                    County = model.County,
-                    PostalCode = model.PostalCode,
-                    Balance = 100.00
-                };
+                var customer = _mapper.Map<CustomerAccountDto>(model);
+                customer.AuthId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
                 try
                 {
                     var response = await _accountService.UpdateAccount(customer);

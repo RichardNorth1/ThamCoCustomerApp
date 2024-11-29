@@ -1,6 +1,6 @@
-﻿namespace ThamCoCustomerApp.Models
+﻿namespace ThamCoCustomerApp.Dtos
 {
-    public class CustomerAccount
+    public class CustomerAccountDto
     {
 
         public string AuthId { get; set; }

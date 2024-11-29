@@ -13,6 +13,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using ThamCoCustomerApp.Dtos;
 
 namespace ThamCoCustomerApp.Tests.Controllers
 {
@@ -54,7 +55,7 @@ namespace ThamCoCustomerApp.Tests.Controllers
         public async Task ProfileAsync_ReturnsViewModelWithCustomerDetails()
         {
             // Arrange
-            var customer = new CustomerAccount
+            var customer = new CustomerAccountDto
             {
                 Surname = "Doe",
                 Forename = "John",
@@ -108,7 +109,7 @@ namespace ThamCoCustomerApp.Tests.Controllers
             var response = new HttpResponseMessage { StatusCode = HttpStatusCode.OK };
 
             _mockAccountService
-                .Setup(s => s.UpdateAccount(It.IsAny<CustomerAccount>()))
+                .Setup(s => s.UpdateAccount(It.IsAny<CustomerAccountDto>()))
                 .ReturnsAsync(response);
 
             // Act
