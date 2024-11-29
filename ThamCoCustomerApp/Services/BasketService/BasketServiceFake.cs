@@ -108,7 +108,12 @@ namespace ThamCoCustomerApp.Services.BasketService
             var basket = _baskets.FirstOrDefault(c => string.Equals(c.CustomerId, customerId, StringComparison.OrdinalIgnoreCase));
             if (basket != null)
             {
-                basket.Products.RemoveAll(p => p.ProductId == product.ProductId);
+                var productToRemove = basket.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+                if (productToRemove != null)
+                {
+                    basket.Products.Remove(productToRemove);
+                }
+
                 return Task.FromResult(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.OK,
