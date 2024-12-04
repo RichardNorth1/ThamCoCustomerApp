@@ -14,6 +14,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using ThamCoCustomerApp.Dtos;
+using AutoMapper;
 
 namespace ThamCoCustomerApp.Tests.Controllers
 {
@@ -22,20 +23,27 @@ namespace ThamCoCustomerApp.Tests.Controllers
     {
         private Mock<IAccountService> _mockAccountService;
         private AccountController _controller;
+        private IMapper _mapper;
 
         [SetUp]
         public void SetUp()
         {
             _mockAccountService = new Mock<IAccountService>();
-            _controller = new AccountController(_mockAccountService.Object);
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<CustomerAccountDto, UserProfileViewModel>();
+                cfg.CreateMap<UserProfileViewModel, CustomerAccountDto>();
+            });
+            _mapper = config.CreateMapper();
+            _controller = new AccountController(_mockAccountService.Object, _mapper);
 
             var httpContext = new DefaultHttpContext();
             var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, "auth0|123"),
-            new Claim(ClaimTypes.Name, "testuser@example.com"),
-            new Claim("picture", "https://example.com/picture.jpg")
-        };
+            {
+                new Claim(ClaimTypes.NameIdentifier, "auth0|123"),
+                new Claim(ClaimTypes.Name, "testuser@example.com"),
+                new Claim("picture", "https://example.com/picture.jpg")
+            };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             httpContext.User = new ClaimsPrincipal(identity);
 
@@ -89,7 +97,6 @@ namespace ThamCoCustomerApp.Tests.Controllers
             Assert.AreEqual("testuser@example.com", model.EmailAddress);
         }
 
-
         [Test]
         public async Task UpdateProfileAsync_ValidModel_UpdatesAccount()
         {
@@ -129,8 +136,5 @@ namespace ThamCoCustomerApp.Tests.Controllers
             // Assert
             Assert.IsNotNull(result);
         }
-
-
     }
 }
-

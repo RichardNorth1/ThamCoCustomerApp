@@ -130,7 +130,7 @@ namespace ThamCoCustomerApp.Tests.Services
                 City = "Updated city",
                 County = "Updated county",
                 PostalCode = "Updated postal code",
-                Balance = 300
+                Balance = 100
             };
 
             // Act
