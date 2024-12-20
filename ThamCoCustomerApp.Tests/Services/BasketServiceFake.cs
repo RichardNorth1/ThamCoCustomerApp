@@ -24,14 +24,23 @@ namespace ThamCoCustomerApp.Tests.Services
         public async Task AddToBasket_ShouldAddProduct_WhenCustomerHasNoBasket()
         {
             // Arrange
-            var customerId = "customer1";
-            var product = new CompanyWithProductDto { ProductId = 1, Name = "Product 1" };
+            var customerId = "123";
+            var product = new CompanyWithProductDto 
+            { 
+                ProductId = 1,
+                CompanyId = 1,
+                Name = "test product",
+                Brand = "Test Brand",
+                Description = "Test Description",
+                Price = 10,
+                ImageUrl = "Test Url",
+                StockLevel = 1
+            
+            };
 
-            // Act
             var response = await _basketServiceFake.AddToBasket(customerId, product);
             var basket = JsonSerializer.Deserialize<BasketDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(basket);
             Assert.AreEqual(customerId, basket.CustomerId);
@@ -42,18 +51,37 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task AddToBasket_ShouldAddProduct_WhenCustomerHasBasket()
         {
-            // Arrange
-            var customerId = "customer1";
-            var product1 = new CompanyWithProductDto { ProductId = 1, Name = "Product 1" };
-            var product2 = new CompanyWithProductDto { ProductId = 2, Name = "Product 2" };
+            var customerId = "123";
+            var product1 =  new CompanyWithProductDto
+            {
+                ProductId = 1,
+                CompanyId = 1,
+                Name = "test product",
+                Brand = "Test Brand",
+                Description = "Test Description",
+                Price = 10,
+                ImageUrl = "Test Url",
+                StockLevel = 1
+
+            };
+            var product2 = new CompanyWithProductDto
+            {
+                ProductId = 2,
+                CompanyId = 1,
+                Name = "test product 2",
+                Brand = "Test Brand 2",
+                Description = "Test Description 2",
+                Price = 20,
+                ImageUrl = "Test Url 2",
+                StockLevel = 2
+
+            };
 
             await _basketServiceFake.AddToBasket(customerId, product1);
 
-            // Act
             var response = await _basketServiceFake.AddToBasket(customerId, product2);
             var basket = JsonSerializer.Deserialize<BasketDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(basket);
             Assert.AreEqual(customerId, basket.CustomerId);
@@ -65,17 +93,25 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task ClearBasket_ShouldClearProducts_WhenCustomerHasBasket()
         {
-            // Arrange
-            var customerId = "customer1";
-            var product = new CompanyWithProductDto { ProductId = 1, Name = "Product 1" };
+            var customerId = "123";
+            var product = new CompanyWithProductDto
+            {
+                ProductId = 1,
+                CompanyId = 1,
+                Name = "test product",
+                Brand = "Test Brand",
+                Description = "Test Description",
+                Price = 10,
+                ImageUrl = "Test Url",
+                StockLevel = 1
+
+            };
 
             await _basketServiceFake.AddToBasket(customerId, product);
 
-            // Act
             var response = await _basketServiceFake.ClearBasket(customerId);
             var basket = JsonSerializer.Deserialize<BasketDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(basket);
             Assert.AreEqual(customerId, basket.CustomerId);
@@ -85,14 +121,11 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task ClearBasket_ShouldCreateEmptyBasket_WhenCustomerHasNoBasket()
         {
-            // Arrange
-            var customerId = "customer1";
+            var customerId = "123";
 
-            // Act
             var response = await _basketServiceFake.ClearBasket(customerId);
             var basket = JsonSerializer.Deserialize<BasketDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(basket);
             Assert.AreEqual(customerId, basket.CustomerId);
@@ -102,17 +135,25 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task GetBasket_ShouldReturnBasket_WhenCustomerHasBasket()
         {
-            // Arrange
-            var customerId = "customer1";
-            var product = new CompanyWithProductDto { ProductId = 1, Name = "Product 1" };
+            var customerId = "123";
+            var product = new CompanyWithProductDto
+            {
+                ProductId = 1,
+                CompanyId = 1,
+                Name = "test product",
+                Brand = "Test Brand",
+                Description = "Test Description",
+                Price = 10,
+                ImageUrl = "Test Url",
+                StockLevel = 1
+
+            };
 
             await _basketServiceFake.AddToBasket(customerId, product);
 
-            // Act
             var response = await _basketServiceFake.GetBasket(customerId);
             var basket = JsonSerializer.Deserialize<BasketDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(basket);
             Assert.AreEqual(customerId, basket.CustomerId);
@@ -123,14 +164,11 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task GetBasket_ShouldCreateEmptyBasket_WhenCustomerHasNoBasket()
         {
-            // Arrange
-            var customerId = "customer1";
+            var customerId = "123";
 
-            // Act
             var response = await _basketServiceFake.GetBasket(customerId);
             var basket = JsonSerializer.Deserialize<BasketDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(basket);
             Assert.AreEqual(customerId, basket.CustomerId);
@@ -140,19 +178,38 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task RemoveFromBasket_ShouldRemoveProduct_WhenProductExistsInBasket()
         {
-            // Arrange
-            var customerId = "customer1";
-            var product1 = new CompanyWithProductDto { ProductId = 1, Name = "Product 1" };
-            var product2 = new CompanyWithProductDto { ProductId = 2, Name = "Product 2" };
+            var customerId = "123";
+            var product1 = new CompanyWithProductDto
+            {
+                ProductId = 1,
+                CompanyId = 1,
+                Name = "test product",
+                Brand = "Test Brand",
+                Description = "Test Description",
+                Price = 10,
+                ImageUrl = "Test Url",
+                StockLevel = 1
+
+            };
+            var product2  = new CompanyWithProductDto
+            {
+                ProductId = 2,
+                CompanyId = 2,
+                Name = "test product 2",
+                Brand = "Test Brand 2",
+                Description = "Test Description 2",
+                Price = 20,
+                ImageUrl = "Test Url 2",
+                StockLevel = 2
+
+            };
 
             await _basketServiceFake.AddToBasket(customerId, product1);
             await _basketServiceFake.AddToBasket(customerId, product2);
 
-            // Act
             var response = await _basketServiceFake.RemoveFromBasket(customerId, product1);
             var basket = JsonSerializer.Deserialize<BasketDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(basket);
             Assert.AreEqual(customerId, basket.CustomerId);
@@ -163,18 +220,37 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task RemoveFromBasket_ShouldDoNothing_WhenProductDoesNotExistInBasket()
         {
-            // Arrange
-            var customerId = "customer1";
-            var product1 = new CompanyWithProductDto { ProductId = 1, Name = "Product 1" };
-            var product2 = new CompanyWithProductDto { ProductId = 2, Name = "Product 2" };
+            var customerId = "123";
+            var product1 = new CompanyWithProductDto
+            {
+                ProductId = 1,
+                CompanyId = 1,
+                Name = "test product",
+                Brand = "Test Brand",
+                Description = "Test Description",
+                Price = 10,
+                ImageUrl = "Test Url",
+                StockLevel = 1
+
+            };
+            var product2 = new CompanyWithProductDto
+            {
+                ProductId = 2,
+                CompanyId = 2,
+                Name = "test product 2",
+                Brand = "Test Brand 2",
+                Description = "Test Description 2",
+                Price = 20,
+                ImageUrl = "Test Url 2",
+                StockLevel = 2
+
+            };
 
             await _basketServiceFake.AddToBasket(customerId, product1);
 
-            // Act
             var response = await _basketServiceFake.RemoveFromBasket(customerId, product2);
             var basket = JsonSerializer.Deserialize<BasketDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(basket);
             Assert.AreEqual(customerId, basket.CustomerId);

@@ -22,14 +22,11 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task GetProduct_ShouldReturnProduct_WhenProductIdExists()
         {
-            // Arrange
             var productId = 1;
 
-            // Act
             var response = await _productServiceFake.GetProduct(productId);
             var product = JsonSerializer.Deserialize<CompanyWithProductDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(product);
             Assert.AreEqual(productId, product.ProductId);
@@ -38,14 +35,11 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task GetProduct_ShouldReturnNull_WhenProductIdDoesNotExist()
         {
-            // Arrange
             var productId = 999;
 
-            // Act
             var response = await _productServiceFake.GetProduct(productId);
             var product = JsonSerializer.Deserialize<CompanyWithProductDto>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNull(product);
         }
@@ -53,11 +47,9 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task GetProducts_ShouldReturnAllProducts()
         {
-            // Act
             var response = await _productServiceFake.GetProducts();
             var products = JsonSerializer.Deserialize<IEnumerable<CompanyWithProductDto>>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(products);
             Assert.AreEqual(5, products.Count());
@@ -66,11 +58,9 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task GetProducts_ShouldReturnCorrectProductDetails()
         {
-            // Act
             var response = await _productServiceFake.GetProducts();
             var products = JsonSerializer.Deserialize<IEnumerable<CompanyWithProductDto>>(await response.Content.ReadAsStringAsync());
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsNotNull(products);
 

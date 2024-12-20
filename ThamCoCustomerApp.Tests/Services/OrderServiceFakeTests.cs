@@ -23,20 +23,16 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task GetOrder_ReturnsNotFound_WhenOrderDoesNotExist()
         {
-            // Act
             var response = await _orderService.GetOrder(999);
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Test]
         public async Task GetOrder_ReturnsOrder_WhenOrderExists()
         {
-            // Act
             var response = await _orderService.GetOrder(1);
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var contentString = await response.Content.ReadAsStringAsync();
             var order = JsonSerializer.Deserialize<OrderDto>(contentString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -47,13 +43,10 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task GetOrders_ReturnsOrders_WhenCustomerIdExists()
         {
-            // Arrange
             var customerId = "1";
 
-            // Act
             var response = await _orderService.GetOrders(customerId);
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var contentString = await response.Content.ReadAsStringAsync();
             var orders = JsonSerializer.Deserialize<List<OrderDto>>(contentString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -65,13 +58,10 @@ namespace ThamCoCustomerApp.Tests.Services
         [Test]
         public async Task GetOrders_UpdatesPredefinedOrders_WhenCustomerIdDoesNotExist()
         {
-            // Arrange
-            var customerId = "new-customer";
+            var customerId = "newCustomer";
 
-            // Act
             var response = await _orderService.GetOrders(customerId);
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var contentString = await response.Content.ReadAsStringAsync();
             var orders = JsonSerializer.Deserialize<List<OrderDto>>(contentString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
